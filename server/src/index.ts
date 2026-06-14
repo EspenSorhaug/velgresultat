@@ -31,13 +31,28 @@ function buildSideMap(data: NrkResponse): Map<string, Side> {
 
 function transform(data: NrkResponse): ResultatPayload {
   const sideMap = buildSideMap(data);
-  const parties: Parti[] = data.partier.map((p) => ({
+
+  // Alle kategori 0-partier ("Andre") slås sammen til én blokk.
+  const andre = data.partier.filter((p) => p.parti.kategori === 0);
+  const ovrige = data.partier.filter((p) => p.parti.kategori !== 0);
+
+  const parties: Parti[] = ovrige.map((p) => ({
     id: p.parti.id,
     kortNavn: p.parti.kortNavn,
     farge: p.parti.farge,
     mandater: p.mandater?.antall ?? 0,
     defaultSide: sideMap.get(p.parti.id) ?? "noytral",
   }));
+
+  if (andre.length > 0) {
+    parties.push({
+      id: "ANDRE",
+      kortNavn: "An",
+      farge: "#000000",
+      mandater: andre.reduce((acc, p) => acc + (p.mandater?.antall ?? 0), 0),
+      defaultSide: "noytral",
+    });
+  }
 
   return {
     totalMandater: data.mandater?.antall ?? 169,
