@@ -32,9 +32,9 @@ function buildSideMap(data: NrkResponse): Map<string, Side> {
 function transform(data: NrkResponse): ResultatPayload {
   const sideMap = buildSideMap(data);
 
-  // Alle kategori 0-partier ("Andre") slås sammen til én blokk.
-  const andre = data.partier.filter((p) => p.parti.kategori === 0);
-  const ovrige = data.partier.filter((p) => p.parti.kategori !== 0);
+  // Alle partier som ikke er kategori 1 ("Andre") slås sammen til én blokk.
+  const andre = data.partier.filter((p) => p.parti.kategori !== 1);
+  const ovrige = data.partier.filter((p) => p.parti.kategori === 1);
 
   const parties: Parti[] = ovrige.map((p) => ({
     id: p.parti.id,

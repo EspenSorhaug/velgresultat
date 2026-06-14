@@ -77,11 +77,11 @@ Hvert parti vises som en blokk med:
 - `farge` som bakgrunnsfarge
 - antall `mandater`
 
-### 5.1.1 «Andre»-blokk (kategori 0)
-Alle partier med `kategori = 0` slås sammen til **én** felles blokk:
+### 5.1.1 «Andre»-blokk (kategori != 1)
+Alle partier med `kategori != 1` slås sammen til **én** felles blokk:
 - Kortnavn: `An`
 - Farge: sort (`#000000`)
-- Mandater: summen av mandatene til alle kategori 0-partiene
+- Mandater: summen av mandatene til alle partiene med `kategori != 1`
 
 Blokken plasseres i Nøytral ved oppstart og oppfører seg ellers som en vanlig
 partiblokk (kan flyttes mellom seksjoner). Aggregeringen skjer i backend.
