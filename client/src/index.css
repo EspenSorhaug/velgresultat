@@ -1,0 +1,122 @@
+:root {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color-scheme: light dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f4f5f7;
+  color: #1a1a1a;
+}
+
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.app-header h1 {
+  margin: 0 0 0.25rem;
+  font-size: 1.6rem;
+}
+
+.app-header .sub {
+  margin: 0;
+  color: #555;
+}
+
+.app-header .updated {
+  color: #888;
+}
+
+.error {
+  color: #b00020;
+  font-weight: 600;
+}
+
+.sections {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 1.5rem;
+  align-items: start;
+}
+
+.seksjon {
+  background: #fff;
+  border: 2px solid #e2e4e8;
+  border-radius: 12px;
+  padding: 1rem;
+  min-height: 320px;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.seksjon.drag-over {
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+
+.seksjon-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.5rem;
+}
+
+.seksjon-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.mandater-sum {
+  font-size: 1.25rem;
+  color: #444;
+}
+
+.mandater-sum.majority {
+  font-weight: 800;
+  color: #15803d;
+}
+
+.blokker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.parti-blokk {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.9rem;
+  border-radius: 8px;
+  cursor: grab;
+  user-select: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  font-weight: 600;
+}
+
+.parti-blokk:active {
+  cursor: grabbing;
+}
+
+.parti-navn {
+  font-size: 1.05rem;
+}
+
+.parti-mandater {
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 720px) {
+  .sections {
+    grid-template-columns: 1fr;
+  }
+}

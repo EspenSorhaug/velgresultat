@@ -1,0 +1,66 @@
+{
+    "parti":{
+        "id":"RØDT",
+        "navn": {
+            "nb": "Rødt",
+            "nn": "Raudt"
+        },
+        "kortNavn": "R",
+        "kategori": 1,
+        "isParti": true,
+        "farge": "#7B0A02",
+        "fargeSvak": "#bd8581",
+        "farger": {
+            "lysModus": {
+                "grafikk": "#7b0a02",
+                "primaer": "#7b0a02",
+                "sekundaer": "#ffddd6",
+                "tertiaer":     "#450502",
+                "tekst": {
+                    "primaer": "#ffffff",
+                    "sekundaer": "#7b0a02"
+                }
+            },
+            "morkModus": {
+                "grafikk": "#b83228",
+                "primaer": "#b21002",
+                "sekundaer": "#621f1a",
+                "tertiaer": "#ff7461",
+                "tekst": {
+                    "primaer": "#ffffff",
+                    "sekundaer": "#f34531"
+                }
+            }
+        },
+        "antallValgdistrikter": 19,
+        "kandidater": [
+            {
+                "plassnummer":          1,
+                "navn": "Marie Sneve Martinussen",
+                "fodselsdato": "1985-12-30",
+                "kjonn": "K",
+                "bildeUrl": "https://gfx.nrk.no/HAsd_pGOjKjP241oLkVcZAgJUzuarACJGzgcLn2S8JMA"
+            }
+        ]
+    },
+    "stemmer": {
+        "prosent": 5.3,
+        "endring": {
+            "samme": 0.6
+        },
+        "antall": {
+            "total": 171151,
+            "fhs": 110464
+        }
+    },
+    "mandater": {
+        "antall": 9,
+        "endring": 1,
+        "utjevningAntall": 5,
+        "utjevning": {
+            "kvotient": 0.3701264764293927,
+            "mandatrang": 10
+        }
+    },
+    "hasNrkPrognose": false
+}
