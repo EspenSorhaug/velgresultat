@@ -3,7 +3,7 @@ import cors from "cors";
 import type {
   NrkResponse,
   Parti,
-  ResultatPayload,
+  ResultatViewModel,
   Side,
 } from "./types.js";
 
@@ -12,7 +12,7 @@ const POLL_INTERVAL_MS = 30_000;
 const MAJORITY_THRESHOLD = 85;
 const PORT = process.env.PORT ?? 3001;
 
-let latest: ResultatPayload | null = null;
+let latest: ResultatViewModel | null = null;
 let lastError: string | null = null;
 
 /** Build a parti.id -> Side map from the Rød/Blå konstellasjoner. */
@@ -29,14 +29,14 @@ function buildSideMap(data: NrkResponse): Map<string, Side> {
   return map;
 }
 
-function transform(data: NrkResponse): ResultatPayload {
+function transform(data: NrkResponse): ResultatViewModel {
   const sideMap = buildSideMap(data);
 
   // Alle partier som ikke er kategori 1 ("Andre") slås sammen til én blokk.
   const andre = data.partier.filter((p) => p.parti.kategori !== 1);
   const ovrige = data.partier.filter((p) => p.parti.kategori === 1);
 
-  const parties: Parti[] = ovrige.map((p) => ({
+  const partier: Parti[] = ovrige.map((p) => ({
     id: p.parti.id,
     kortNavn: p.parti.kortNavn,
     farge: p.parti.farge,
@@ -45,7 +45,7 @@ function transform(data: NrkResponse): ResultatPayload {
   }));
 
   if (andre.length > 0) {
-    parties.push({
+    partier.push({
       id: "ANDRE",
       kortNavn: "An",
       farge: "#000000",
@@ -55,10 +55,10 @@ function transform(data: NrkResponse): ResultatPayload {
   }
 
   return {
-    totalMandater: data.mandater?.antall ?? 169,
-    majorityThreshold: MAJORITY_THRESHOLD,
-    parties,
-    updatedAt: new Date().toISOString(),
+    totaltAntallMandater: data.mandater?.antall ?? 169,
+    flertallTerskel: MAJORITY_THRESHOLD,
+    partier: partier,
+    oppdatert: new Date().toISOString(),
   };
 }
 
@@ -70,7 +70,7 @@ async function poll(): Promise<void> {
     latest = transform(data);
     lastError = null;
     console.log(
-      `[poll] oppdatert ${latest.updatedAt} – ${latest.parties.length} partier`,
+      `[poll] oppdatert ${latest.oppdatert} – ${latest.partier.length} partier`,
     );
   } catch (err) {
     lastError = err instanceof Error ? err.message : String(err);
@@ -90,7 +90,7 @@ app.get("/api/resultat", (_req, res) => {
 });
 
 app.get("/api/health", (_req, res) => {
-  res.json({ ok: latest !== null, lastError, updatedAt: latest?.updatedAt });
+  res.json({ ok: latest !== null, lastError, oppdatert: latest?.oppdatert });
 });
 
 app.listen(PORT, () => {

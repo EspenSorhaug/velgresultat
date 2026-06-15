@@ -31,9 +31,9 @@ export interface Parti {
   defaultSide: Side;
 }
 
-export interface ResultatPayload {
-  totalMandater: number;
-  majorityThreshold: number;
-  parties: Parti[];
-  updatedAt: string;
+export interface ResultatViewModel {
+  totaltAntallMandater: number;
+  flertallTerskel: number;
+  partier: Parti[];
+  oppdatert: string;
 }
