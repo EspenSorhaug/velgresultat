@@ -15,8 +15,12 @@ export function Seksjon({ side, label, partier, threshold, onDropParti }: Props)
   const sum = partier.reduce((acc, p) => acc + p.mandater, 0);
   const hasMajority = sum >= threshold;
 
+  // Unik id per seksjon for aria-labelledby (funn 7)
+  const headingId = `seksjon-heading-${side}`;
+
   return (
     <section
+      aria-labelledby={headingId}
       className={`seksjon${dragOver ? " drag-over" : ""}`}
       onDragOver={(e) => {
         e.preventDefault();
@@ -31,17 +35,25 @@ export function Seksjon({ side, label, partier, threshold, onDropParti }: Props)
       }}
     >
       <header className="seksjon-header">
-        <h2>{label}</h2>
-        <div
-          className={`mandater-sum${hasMajority ? " majority" : ""}`}
-          title={hasMajority ? "Flertall!" : undefined}
-        >
+        <h2 id={headingId}>{label}</h2>
+        {/* Funn 5: flertall formidles som synlig tekst, ikke bare farge */}
+        <div className={`mandater-sum${hasMajority ? " majority" : ""}`}>
           {sum} mandater
+          {hasMajority && (
+            <span className="flertall-badge" aria-label="Flertall oppnadd">
+              {" "}&#10003; Flertall
+            </span>
+          )}
         </div>
       </header>
       <div className="blokker">
         {partier.map((p) => (
-          <PartiBlokk key={p.id} parti={p} />
+          <PartiBlokk
+            key={p.id}
+            parti={p}
+            currentSide={side}
+            onMove={onDropParti}
+          />
         ))}
       </div>
     </section>

@@ -1,17 +1,52 @@
-import type { Parti } from "./types.js";
+import type { Parti, Side } from "./types.js";
+import { SIDER } from "./types.js";
 
-/** Velg svart eller hvit tekst basert på bakgrunnsfargens lyshet. */
-function textColor(hex: string): string {
+/**
+ * Beregner relativ luminans etter WCAG 2.x (sRGB-gamma).
+ * https://www.w3.org/TR/WCAG21/#dfn-relative-luminance
+ */
+function relativeLuminance(hex: string): number {
   const m = hex.replace("#", "");
-  if (m.length !== 6) return "#fff";
-  const r = parseInt(m.slice(0, 2), 16);
-  const g = parseInt(m.slice(2, 4), 16);
-  const b = parseInt(m.slice(4, 6), 16);
-  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-  return luminance > 0.6 ? "#1a1a1a" : "#ffffff";
+  if (m.length !== 6) return 0;
+  const toLinear = (c: number): number => {
+    const s = c / 255;
+    return s <= 0.04045 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+  };
+  const r = toLinear(parseInt(m.slice(0, 2), 16));
+  const g = toLinear(parseInt(m.slice(2, 4), 16));
+  const b = toLinear(parseInt(m.slice(4, 6), 16));
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 
-export function PartiBlokk({ parti }: { parti: Parti }) {
+/** Kontrastforhold mellom to luminansverdier (WCAG-formel). */
+function contrastRatio(l1: number, l2: number): number {
+  const lighter = Math.max(l1, l2);
+  const darker = Math.min(l1, l2);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+/**
+ * Velg svart eller hvit tekst slik at kontrastforholdet mot bakgrunnen
+ * alltid er høyest mulig og oppfyller WCAG 1.4.3 (4.5:1).
+ */
+function textColor(hex: string): string {
+  const bgLum = relativeLuminance(hex);
+  const whiteLum = 1;
+  const blackLum = 0;
+  const whiteContrast = contrastRatio(whiteLum, bgLum);
+  const blackContrast = contrastRatio(blackLum, bgLum);
+  return whiteContrast >= blackContrast ? "#ffffff" : "#1a1a1a";
+}
+
+interface Props {
+  parti: Parti;
+  currentSide: Side;
+  onMove: (id: string, side: Side) => void;
+}
+
+export function PartiBlokk({ parti, currentSide, onMove }: Props) {
+  const andreSider = SIDER.filter((s) => s.key !== currentSide);
+
   return (
     <div
       className="parti-blokk"
@@ -21,10 +56,30 @@ export function PartiBlokk({ parti }: { parti: Parti }) {
         e.dataTransfer.effectAllowed = "move";
       }}
       style={{ backgroundColor: parti.farge, color: textColor(parti.farge) }}
-      title={`${parti.kortNavn}: ${parti.mandater} mandater`}
     >
-      <span className="parti-navn">{parti.kortNavn}</span>
-      <span className="parti-mandater">{parti.mandater}</span>
+      {/* Synlig tekst gir tilgjengelig navn — title-tooltip er fjernet (funn 2) */}
+      <span className="parti-info">
+        <span className="parti-navn">{parti.kortNavn}</span>
+        <span className="parti-mandater" aria-label={`${parti.mandater} mandater`}>
+          {parti.mandater}
+        </span>
+      </span>
+
+      {/* Tastaturalternativ til drag-and-drop (funn 1) */}
+      <span className="parti-knapper" role="group" aria-label={`Flytt ${parti.kortNavn}`}>
+        {andreSider.map((s) => (
+          <button
+            key={s.key}
+            className="flytt-knapp"
+            onClick={() => onMove(parti.id, s.key)}
+            aria-label={`Flytt ${parti.kortNavn} til ${s.label}`}
+            title={`Flytt til ${s.label}`}
+            style={{ color: textColor(parti.farge) }}
+          >
+            {s.label === "Venstresiden" ? "←" : s.label === "Høyresiden" ? "→" : "○"}
+          </button>
+        ))}
+      </span>
     </div>
   );
 }

@@ -12,7 +12,7 @@ Se [spec.md](spec.md) for full kravspesifikasjon.
 - **server/** – Node.js + Express (TypeScript), poller NRKs valg-API hvert 30. sekund
 - **pnpm** workspaces
 
-## Kom i gang
+## Starte applikasjonen
 
 ```bash
 pnpm install

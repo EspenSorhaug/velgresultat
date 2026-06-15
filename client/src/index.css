@@ -29,8 +29,9 @@ body {
   color: #555;
 }
 
+/* Funn 6: #767676 pa #f4f5f7 gir ~4.54:1, oppmater WCAG 1.4.3 */
 .app-header .updated {
-  color: #888;
+  color: #767676;
 }
 
 .error {
@@ -100,10 +101,18 @@ body {
   user-select: none;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
   font-weight: 600;
+  gap: 0.5rem;
 }
 
 .parti-blokk:active {
   cursor: grabbing;
+}
+
+.parti-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
 }
 
 .parti-navn {
@@ -115,8 +124,59 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+/* Funn 1: Tastaturalternativ til drag-and-drop */
+.parti-knapper {
+  display: flex;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.flytt-knapp {
+  /* Arver tekstfarge fra JavaScript for kontrast mot partifarge */
+  background: transparent;
+  border: 2px solid currentColor;
+  border-radius: 4px;
+  /* Minst 24×24px berøringsmål (WCAG 2.5.8) */
+  min-width: 24px;
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.15rem 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 1;
+  /* Synlig fokusindikator (WCAG 2.4.11) */
+  outline-offset: 2px;
+}
+
+.flytt-knapp:hover {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.flytt-knapp:focus-visible {
+  outline: 3px solid #005fcc;
+  outline-offset: 2px;
+}
+
+/* Funn 5: Flertall-badge — synlig tekst i tillegg til farge */
+.flertall-badge {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #15803d;
+  margin-left: 0.25rem;
+}
+
 @media (max-width: 720px) {
   .sections {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Funn 8: Respekter prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .seksjon {
+    transition: none;
   }
 }

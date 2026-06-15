@@ -52,7 +52,8 @@ export default function App() {
     <div className="app">
       <header className="app-header">
         <h1>Valgresultat – Regjeringsbygger</h1>
-        <p className="sub">
+        {/* Funn 4: aria-live="polite" annonserer statusendringer for skjermlesere */}
+        <p className="sub" aria-live="polite" aria-atomic="true">
           {data
             ? `${data.totaltAntallMandater} mandater totalt · ${terskel} kreves for flertall`
             : "Laster …"}
@@ -63,7 +64,12 @@ export default function App() {
             </span>
           )}
         </p>
-        {error && <p className="error">Kunne ikke hente data: {error}</p>}
+        {/* Funn 4: role="alert" sikrer umiddelbar annonsering av feil */}
+        {error && (
+          <p className="error" role="alert">
+            Kunne ikke hente data: {error}
+          </p>
+        )}
       </header>
 
       <main className="sections">
