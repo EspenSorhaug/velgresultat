@@ -8,9 +8,20 @@ interface Props {
   partier: Parti[];
   threshold: number;
   onDropParti: (id: string, side: Side) => void;
+  /** Parti som skal ta fokus etter en tastaturflytt. */
+  focusId: string | null;
+  onFocusHandled: () => void;
 }
 
-export function Seksjon({ side, label, partier, threshold, onDropParti }: Props) {
+export function Seksjon({
+  side,
+  label,
+  partier,
+  threshold,
+  onDropParti,
+  focusId,
+  onFocusHandled,
+}: Props) {
   const [dragOver, setDragOver] = useState(false);
   const sum = partier.reduce((acc, p) => acc + p.mandater, 0);
   const hasMajority = sum >= threshold;
@@ -53,6 +64,8 @@ export function Seksjon({ side, label, partier, threshold, onDropParti }: Props)
             parti={p}
             currentSide={side}
             onMove={onDropParti}
+            shouldFocus={p.id === focusId}
+            onFocused={onFocusHandled}
           />
         ))}
       </div>

@@ -12,6 +12,8 @@ export default function App() {
   const [placement, setPlacement] = useState<Record<string, Side>>({});
   const placementRef = useRef(placement);
   placementRef.current = placement;
+  /** Parti som nettopp ble flyttet via tastatur, og som skal beholde fokus. */
+  const [focusId, setFocusId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -41,7 +43,10 @@ export default function App() {
 
   const move = useCallback((id: string, side: Side) => {
     setPlacement((prev) => ({ ...prev, [id]: side }));
+    setFocusId(id);
   }, []);
+
+  const clearFocus = useCallback(() => setFocusId(null), []);
 
   const partiesBySide = (side: Side): Parti[] =>
     (data?.partier ?? []).filter((p) => (placement[p.id] ?? p.defaultSide) === side);
@@ -81,6 +86,8 @@ export default function App() {
             partier={partiesBySide(key)}
             threshold={terskel}
             onDropParti={move}
+            focusId={focusId}
+            onFocusHandled={clearFocus}
           />
         ))}
       </main>

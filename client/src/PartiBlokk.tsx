@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import type { Parti, Side } from "./types.js";
 import { SIDER } from "./types.js";
 
@@ -42,10 +43,22 @@ interface Props {
   parti: Parti;
   currentSide: Side;
   onMove: (id: string, side: Side) => void;
+  /** Sann når blokka nettopp ble flyttet hit via tastatur og skal ta fokus. */
+  shouldFocus: boolean;
+  onFocused: () => void;
 }
 
-export function PartiBlokk({ parti, currentSide, onMove }: Props) {
+export function PartiBlokk({ parti, currentSide, onMove, shouldFocus, onFocused }: Props) {
   const andreSider = SIDER.filter((s) => s.key !== currentSide);
+  const knapperRef = useRef<HTMLSpanElement>(null);
+
+  // Behold fokus etter en tastaturflytt: blokka re-mountes i en ny seksjon,
+  // så vi setter fokus på dens første flytteknapp her.
+  useEffect(() => {
+    if (!shouldFocus) return;
+    knapperRef.current?.querySelector("button")?.focus();
+    onFocused();
+  }, [shouldFocus, onFocused]);
 
   return (
     <div
@@ -66,7 +79,12 @@ export function PartiBlokk({ parti, currentSide, onMove }: Props) {
       </span>
 
       {/* Tastaturalternativ til drag-and-drop (funn 1) */}
-      <span className="parti-knapper" role="group" aria-label={`Flytt ${parti.kortNavn}`}>
+      <span
+        ref={knapperRef}
+        className="parti-knapper"
+        role="group"
+        aria-label={`Flytt ${parti.kortNavn}`}
+      >
         {andreSider.map((s) => (
           <button
             key={s.key}
@@ -76,7 +94,7 @@ export function PartiBlokk({ parti, currentSide, onMove }: Props) {
             title={`Flytt til ${s.label}`}
             style={{ color: textColor(parti.farge) }}
           >
-            {s.label === "Venstresiden" ? "←" : s.label === "Høyresiden" ? "→" : "○"}
+            {s.label === "Venstresiden" ? "←" : s.label === "Høyresiden" ? "→" : "N"}
           </button>
         ))}
       </span>
