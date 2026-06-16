@@ -8,7 +8,6 @@ interface Props {
   partier: Parti[];
   threshold: number;
   onDropParti: (id: string, side: Side) => void;
-  /** Parti som skal ta fokus etter en tastaturflytt. */
   focusId: string | null;
   onFocusHandled: () => void;
 }
@@ -26,7 +25,6 @@ export function Seksjon({
   const sum = partier.reduce((acc, p) => acc + p.mandater, 0);
   const hasMajority = sum >= threshold;
 
-  // Unik id per seksjon for aria-labelledby (funn 7)
   const headingId = `seksjon-heading-${side}`;
 
   return (
@@ -47,7 +45,6 @@ export function Seksjon({
     >
       <header className="seksjon-header">
         <h2 id={headingId}>{label}</h2>
-        {/* Funn 5: flertall formidles som synlig tekst, ikke bare farge */}
         <div className={`mandater-sum${hasMajority ? " majority" : ""}`}>
           {sum} mandater
           {hasMajority && (

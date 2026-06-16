@@ -15,7 +15,6 @@ const PORT = process.env.PORT ?? 3001;
 let latest: ResultatViewModel | null = null;
 let lastError: string | null = null;
 
-/** Build a parti.id -> Side map from the Rød/Blå konstellasjoner. */
 function buildSideMap(data: NrkResponse): Map<string, Side> {
   const map = new Map<string, Side>();
   for (const k of data.konstellasjoner ?? []) {
@@ -31,12 +30,10 @@ function buildSideMap(data: NrkResponse): Map<string, Side> {
 
 function transform(data: NrkResponse): ResultatViewModel {
   const sideMap = buildSideMap(data);
-
-  // Alle partier som ikke er kategori 1 ("Andre") slås sammen til én blokk.
+  const kategori1Partier = data.partier.filter((p) => p.parti.kategori === 1);
   const andre = data.partier.filter((p) => p.parti.kategori !== 1);
-  const ovrige = data.partier.filter((p) => p.parti.kategori === 1);
 
-  const partier: Parti[] = ovrige.map((p) => ({
+  const partier: Parti[] = kategori1Partier.map((p) => ({
     id: p.parti.id,
     kortNavn: p.parti.kortNavn,
     farge: p.parti.farge,
