@@ -82,7 +82,8 @@ body {
   grid-template-columns: repeat(3, 1fr);
   gap: 1.25rem;
   margin-top: 1.75rem;
-  align-items: start;
+  /* stretch: alle seksjoner får samme høyde selv om en header brytes til to linjer */
+  align-items: stretch;
 }
 
 .seksjon {
@@ -122,8 +123,10 @@ body {
 .mandater-sum {
   display: flex;
   align-items: baseline;
-  gap: 0.4rem;
-  font-size: 1.6rem;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.4rem;
+  /* Litt mindre tekst så «… mandater ✓ Flertall» lettere holdes på én linje */
+  font-size: 1.35rem;
   font-weight: 800;
   color: var(--text);
   font-variant-numeric: tabular-nums;
@@ -145,11 +148,55 @@ body {
   letter-spacing: 0.01em;
 }
 
+/* ---- Mandatblokk: 169 ruter fargelagt per seksjon ---- */
+.mandat-blokk {
+  --rute: 16px;
+  display: grid;
+  /* Kolonneflyt: rutene fylles ovenfra og ned i hver kolonne, kolonne for
+     kolonne mot høyre. Slik samles de røde til venstre, så sorte, så blå. */
+  grid-auto-flow: column;
+  grid-template-rows: repeat(5, var(--rute));
+  grid-auto-columns: var(--rute);
+  gap: 3px;
+  justify-content: center;
+  overflow-x: auto;
+  margin-top: 1.75rem;
+  padding: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+@media (max-width: 560px) {
+  .mandat-blokk {
+    --rute: 11px;
+  }
+}
+
+.mandat-rute {
+  border-radius: 2px;
+}
+
+.mandat-rute--venstre {
+  background: #d32f2f;
+}
+
+.mandat-rute--noytral {
+  background: #1a1a1a;
+}
+
+.mandat-rute--hoyre {
+  background: #1565c0;
+}
+
 /* ---- Partiblokker ---- */
 .blokker {
-  display: flex;
-  flex-direction: column;
+  /* Rutenett med plass til 2 i bredden (funn: sortert synkende på mandater) */
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.6rem;
+  align-items: start;
 }
 
 .parti-blokk {

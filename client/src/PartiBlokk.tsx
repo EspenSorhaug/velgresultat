@@ -49,7 +49,11 @@ interface Props {
 }
 
 export function PartiBlokk({ parti, currentSide, onMove, shouldFocus, onFocused }: Props) {
-  const andreSider = SIDER.filter((s) => s.key !== currentSide);
+  // Kun nabofeltene: blokker kan flyttes én seksjon om gangen.
+  const currentIndex = SIDER.findIndex((s) => s.key === currentSide);
+  const naboer = [SIDER[currentIndex - 1], SIDER[currentIndex + 1]].filter(
+    (s): s is (typeof SIDER)[number] => Boolean(s),
+  );
   const knapperRef = useRef<HTMLSpanElement>(null);
 
   // Behold fokus etter en tastaturflytt: blokka re-mountes i en ny seksjon,
@@ -85,18 +89,21 @@ export function PartiBlokk({ parti, currentSide, onMove, shouldFocus, onFocused 
         role="group"
         aria-label={`Flytt ${parti.kortNavn}`}
       >
-        {andreSider.map((s) => (
-          <button
-            key={s.key}
-            className="flytt-knapp"
-            onClick={() => onMove(parti.id, s.key)}
-            aria-label={`Flytt ${parti.kortNavn} til ${s.label}`}
-            title={`Flytt til ${s.label}`}
-            style={{ color: textColor(parti.farge) }}
-          >
-            {s.label === "Venstresiden" ? "←" : s.label === "Høyresiden" ? "→" : "N"}
-          </button>
-        ))}
+        {naboer.map((s) => {
+          const retning = SIDER.findIndex((x) => x.key === s.key) < currentIndex ? "←" : "→";
+          return (
+            <button
+              key={s.key}
+              className="flytt-knapp"
+              onClick={() => onMove(parti.id, s.key)}
+              aria-label={`Flytt ${parti.kortNavn} til ${s.label}`}
+              title={`Flytt til ${s.label}`}
+              style={{ color: textColor(parti.farge) }}
+            >
+              {retning}
+            </button>
+          );
+        })}
       </span>
     </div>
   );

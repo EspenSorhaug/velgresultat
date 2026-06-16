@@ -86,7 +86,18 @@ Alle partier med `kategori != 1` slås sammen til **én** felles blokk:
 Blokken plasseres i Nøytral ved oppstart og oppfører seg ellers som en vanlig
 partiblokk (kan flyttes mellom seksjoner). Aggregeringen skjer i backend.
 
-### 5.2 Tre seksjoner
+### 5.2 Mandatblokk (oversikt)
+Over seksjonene vises en **MandatBlokk** med **169 kvadrater** – ett per mandat.
+Hvert kvadrat fargelegges etter hvilken seksjon mandatet tilhører:
+
+- **Venstresiden** → rød
+- **Nøytral** → sort
+- **Høyresiden** → blå
+
+Rutene plasseres i politisk rekkefølge fra venstre mot høyre (rød, sort, blå), og
+oppdateres umiddelbart når blokker flyttes mellom seksjoner.
+
+### 5.3 Tre seksjoner
 Tre seksjoner plassert horisontalt ved siden av hverandre:
 
 1. **Venstresiden**
@@ -95,18 +106,25 @@ Tre seksjoner plassert horisontalt ved siden av hverandre:
 
 Blokker kan ligge i hvilken som helst av de tre seksjonene.
 
-### 5.3 Mandattelling per seksjon
+Hver seksjon viser partiblokkene i et **rutenett med plass til 2 i bredden**,
+**sortert synkende etter antall mandater** – partiet med flest mandater øverst
+til venstre.
+
+### 5.4 Mandattelling per seksjon
 - Over blokkene i hver seksjon vises summen av mandater for partiene i
   seksjonen, tydelig fremhevet.
 - Når en seksjon har **≥ 85 mandater**, vises tallet/teksten i **bold** for å
   signalisere flertall.
 
-### 5.4 Flytte partier
+### 5.5 Flytte partier
 - Brukeren kan flytte partier mellom Venstresiden, Nøytral og Høyresiden
   (f.eks. drag-and-drop eller knapper).
+- Blokker kan kun flyttes **én seksjon om gangen** (til en nabofelt): fra
+  Venstresiden til Nøytral, fra Nøytral til Venstresiden eller Høyresiden, og
+  fra Høyresiden til Nøytral. Flytteknappene viser kun retning (← / →).
 - Mandatsummen i berørte seksjoner oppdateres umiddelbart etter flytting.
 
-### 5.5 Live oppdatering
+### 5.6 Live oppdatering
 - Mandattall oppdateres automatisk hvert 30. sekund fra API-et.
 - Brukerens plassering av partier i seksjoner skal ikke gå tapt ved oppdatering.
 
@@ -117,7 +135,12 @@ Blokker kan ligge i hvilken som helst av de tre seksjonene.
 - [ ] Backend henter data fra NRK-API-et hvert 30. sekund.
 - [ ] Alle partier vises som blokker med kortNavn, riktig farge og mandater.
 - [ ] Tre seksjoner (Venstresiden, Nøytral, Høyresiden) vises horisontalt.
+- [ ] En MandatBlokk med 169 fargede kvadrater (rød/sort/blå) vises over
+      seksjonene og gjenspeiler fordelingen per seksjon.
+- [ ] Partiblokkene i hver seksjon vises i et rutenett (2 i bredden), sortert
+      synkende etter mandater.
 - [ ] Sum av mandater vises over blokkene i hver seksjon.
 - [ ] Seksjon med ≥ 85 mandater vises i bold.
-- [ ] Partier kan flyttes mellom seksjoner, og summene oppdateres.
+- [ ] Partier kan kun flyttes én seksjon (nabofelt) om gangen, og summene
+      oppdateres.
 - [ ] Mandattall oppdateres live uten å miste brukerens plassering.

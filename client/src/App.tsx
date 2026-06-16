@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { Parti, ResultatViewModel, Side } from "./types.js";
 import { SIDER } from "./types.js";
 import { Seksjon } from "./Seksjon.js";
+import { MandatBlokk } from "./MandatBlokk.js";
 
 const POLL_INTERVAL_MS = 30_000;
 
@@ -48,10 +49,16 @@ export default function App() {
 
   const clearFocus = useCallback(() => setFocusId(null), []);
 
+  // Sortert synkende etter mandater: partiet med flest havner øverst til venstre.
   const partiesBySide = (side: Side): Parti[] =>
-    (data?.partier ?? []).filter((p) => (placement[p.id] ?? p.defaultSide) === side);
+    (data?.partier ?? [])
+      .filter((p) => (placement[p.id] ?? p.defaultSide) === side)
+      .sort((a, b) => b.mandater - a.mandater);
 
   const terskel = data?.flertallTerskel ?? 85;
+
+  const sumForSide = (side: Side): number =>
+    partiesBySide(side).reduce((acc, p) => acc + p.mandater, 0);
 
   return (
     <div className="app">
@@ -76,6 +83,13 @@ export default function App() {
           </p>
         )}
       </header>
+
+      <MandatBlokk
+        venstre={sumForSide("venstre")}
+        noytral={sumForSide("noytral")}
+        hoyre={sumForSide("hoyre")}
+        total={data?.totaltAntallMandater ?? 169}
+      />
 
       <main className="sections">
         {SIDER.map(({ key, label }) => (
